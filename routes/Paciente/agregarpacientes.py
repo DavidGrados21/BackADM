@@ -62,8 +62,10 @@ def crear_paciente(paciente: PacienteCrear):
         cursor.execute("""
             INSERT INTO casos_emergencia 
             (paciente_id, estado_id, prioridad, origen)
-            VALUES (?, 1, 5, 'puerta')
-        """, (paciente_id,))
+            VALUES (?, 1, 5, ?)
+        """, (paciente_id,
+              paciente.origen,
+              ))
 
         caso_id = cursor.lastrowid
 

@@ -1,12 +1,17 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+import os
 
+load_dotenv()
+
+TOKEN_GEMINI = os.getenv("TOKEN_GEMINI")
 
 router = APIRouter( prefix="/triaje", tags=["Triaje Inteligente"])
 
-client = genai.Client(api_key="AIzaSyCFazQmCoXjOhDvoRWsNfk-BCCOh4CO8hU")
+client = genai.Client(api_key= TOKEN_GEMINI )
 
 class PacienteSintomas(BaseModel):
     sintomas: str

@@ -1,2 +1,9 @@
 .env
 hospital_db.db
+routes/gemini/__pycache__/gemini.cpython-314.pyc
+__pycache__/
+
+models/__pycache__/schemas.cpython-314.pyc
+models/__pycache__/schemas.cpython-314.pyc
+routes/gemini/__pycache__/gemini.cpython-314.pyc
+routes/Paciente/__pycache__/agregarpacientes.cpython-314.pyc

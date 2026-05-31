@@ -7,33 +7,7 @@ class PacienteCrear(BaseModel):
     nombre: str
     sexo: str
     fecha_nacimiento: str
-
-
-# 🏥 Historial clínico (opcional pero recomendado)
-class HistorialClinicoCrear(BaseModel):
-    caso_id: int
-    alergias: str
-    enfermedades: str
-    medicamentos: str
-
-
-# 🚑 Pre-triaje (antes de llegar)
-class PreTriajeRequest(BaseModel):
-    paciente_id: int
-    sintomas: List[str]
-    origen: Literal['pre_arribo', 'presencial']
-
-class CasoCrear(BaseModel):
-    paciente_id: int
-    prioridad: int
-    origen: Literal['pre_arribo', 'presencial']
-
-class EstadoActualizar(BaseModel):
-    estado: Literal['pendiente', 'en_atencion', 'finalizado']
-
-class AsignacionRequest(BaseModel):
-    doctor_id: int
-    camilla_id: int
+    origen : str
     
 class TriajeSchema(BaseModel):
     sintomas: str
