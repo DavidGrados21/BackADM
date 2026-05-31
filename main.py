@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from db.db import init_db
 from db.seed import seed_data
 from routes import mostrarcola, triaje
-from routes.Extras import paseaatencion,consultadni
+from routes.Extras import paseaatencion,consultadni, consultarDescripcion
 
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -41,5 +41,6 @@ app.include_router(triaje.router)
 app.include_router(mostrarcola.router)
 app.include_router(paseaatencion.router)
 app.include_router(consultadni.router)
+app.include_router(consultarDescripcion.router)
 
 app.include_router(gemini.router)
