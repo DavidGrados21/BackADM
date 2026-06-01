@@ -1,6 +1,6 @@
 import sqlite3
 
-DB_PATH = "hospital_db.db"
+DB_PATH = "hospital_dbSCD.db"
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -21,18 +21,17 @@ def init_db():
     # PACIENTES
     # =========================
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS pacientes (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        dni TEXT UNIQUE NOT NULL,
-        nombre TEXT NOT NULL,
-        fecha_nacimiento DATE,
-        sexo TEXT CHECK(sexo IN ('M','F')),
-        telefono TEXT,
-        direccion TEXT,
-        tipo_sangre TEXT,
-        tiene_tatuajes BOOLEAN DEFAULT 0,
-        religion TEXT,
-        contacto_emergencia TEXT,
+    CREATE TABLE IF NOT EXISTS paciente (
+        dni_paciente TEXT PRIMARY KEY,
+        nombre_paciente TEXT NOT NULL,
+        fecha_nacimiento_paciente DATE,
+        sexo_paciente TEXT CHECK(sexo_paciente IN ('M','F')),
+        telefono_paciente TEXT,
+        direccion_paciente TEXT,
+        tipo_sangre_paciente TEXT,
+        tiene_tatuajes_paciente BOOLEAN DEFAULT 0,
+        religion_paciente TEXT,
+        contacto_emergencia_paciente TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
@@ -42,27 +41,13 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS historial_clinico (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        paciente_id INTEGER NOT NULL,
+        dni_paciente TEXT NOT NULL,
         diagnostico TEXT,
-        tratamiento TEXT,
+        id_receta INTEGER,
         observaciones TEXT,
         fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(paciente_id)
-            REFERENCES pacientes(id)
-            ON DELETE CASCADE
-    )
-    """)
-    
-
-    # =========================
-    # ENFERMEDADES
-    # =========================
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS paciente_enfermedades (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        paciente_id INTEGER NOT NULL,
-        enfermedad TEXT NOT NULL,
-        FOREIGN KEY(paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE
+        FOREIGN KEY(dni_paciente) REFERENCES paciente(dni_paciente) ON DELETE CASCADE,
+        FOREIGN KEY(id_receta) REFERENCES receta(id_receta) ON DELETE SET NULL
     )
     """)
 
@@ -70,21 +55,44 @@ def init_db():
     # MEDICAMENTOS
     # =========================
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS paciente_medicamentos (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        paciente_id INTEGER NOT NULL,
-        medicamento TEXT NOT NULL,
-        FOREIGN KEY(paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE
+    CREATE TABLE IF NOT EXISTS medicamento (
+        id_medicamento INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre_medicamento TEXT NOT NULL
     )
     """)
+    
+    # =========================
+    # RECETA
+    # =========================
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS receta (
+        id_receta INTEGER PRIMARY KEY AUTOINCREMENT
+    )
+    """)
+    
+    # =========================
+    # DETALLE RECETA
+    # =========================
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS receta_detalle (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_receta INTEGER,
+        id_medicamento INTEGER,
+        cantidad INTEGER NOT NULL CHECK(cantidad > 0),
+        FOREIGN KEY(id_receta) REFERENCES receta(id_receta) ON DELETE CASCADE,
+        FOREIGN KEY(id_medicamento) REFERENCES medicamento(id_medicamento)
+)
+    """)
+    
+    
 
     # =========================
     # ESPECIALIDADES
     # =========================
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS especialidades (
-        id INTEGER PRIMARY KEY,
-        nombre TEXT UNIQUE NOT NULL
+    CREATE TABLE IF NOT EXISTS especialidad (
+        id_especialidad INTEGER PRIMARY KEY,
+        nombre_especialidad TEXT UNIQUE NOT NULL
     )
     """)
 
@@ -92,60 +100,36 @@ def init_db():
     # DOCTORES
     # =========================
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS doctores (
-        id INTEGER PRIMARY KEY,
-        nombre TEXT,
-        especialidad_id INTEGER,
+    CREATE TABLE IF NOT EXISTS doctor (
+        id_doctor INTEGER PRIMARY KEY,
+        nombre_doctor TEXT NOT NULL,
+        especialidad_id INTEGER NOT NULL ,
         disponibilidad INTEGER CHECK(disponibilidad IN (0,1)),
-        FOREIGN KEY(especialidad_id) REFERENCES especialidades(id) ON DELETE SET NULL
+        email_doctor TEXT UNIQUE NOT NULL,
+        password_doctor TEXT NOT NULL,
+        FOREIGN KEY(especialidad_id) REFERENCES especialidad(id_especialidad) ON DELETE RESTRICT
     )
     """)
 
-    # =========================
-    # USUARIOS
-    # =========================
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY,
-        doctor_id INTEGER UNIQUE,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
-        FOREIGN KEY(doctor_id) REFERENCES doctores(id) ON DELETE CASCADE
-    )
-    """)
 
     # =========================
     # CAMILLAS (EMERGENCIA)
     # =========================
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS camillas (
-        id INTEGER PRIMARY KEY,
-        ocupada INTEGER CHECK(ocupada IN (0,1))
+    CREATE TABLE IF NOT EXISTS camilla (
+        id_camilla INTEGER PRIMARY KEY,
+        estado_camilla BOOLEAN DEFAULT 0
     )
     """)
-    
-    # =========================
-    # HABITACIONES
-    # =========================
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS habitaciones (
-        id INTEGER PRIMARY KEY,
 
-        numero TEXT UNIQUE NOT NULL,
-
-        piso INTEGER,
-
-        ocupada BOOLEAN DEFAULT 0
-    )
-    """)
 
     # =========================
     # ESTADOS CASO
     # =========================
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS estados_caso (
-        id INTEGER PRIMARY KEY,
-        nombre TEXT UNIQUE NOT NULL
+        id_estado INTEGER PRIMARY KEY,
+        nombre_estado TEXT UNIQUE NOT NULL
     )
     """)
     
@@ -154,18 +138,18 @@ def init_db():
     # =========================
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS casos_emergencia (
-        id INTEGER PRIMARY KEY,
-        paciente_id INTEGER,
-        doctor_id INTEGER,
-        camilla_id INTEGER,
-        estado_id INTEGER,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        dni_paciente TEXT,
+        id_doctor INTEGER,
+        id_estado INTEGER,
         prioridad INTEGER CHECK(prioridad BETWEEN 1 AND 5),
+        id_especialidad INTEGER NOT NULL,
         origen TEXT,
         fecha_llegada TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(paciente_id) REFERENCES pacientes(id) ON DELETE CASCADE,
-        FOREIGN KEY(doctor_id) REFERENCES doctores(id) ON DELETE SET NULL,
-        FOREIGN KEY(camilla_id) REFERENCES camillas(id) ON DELETE SET NULL,
-        FOREIGN KEY(estado_id) REFERENCES estados_caso(id)
+        FOREIGN KEY(dni_paciente) REFERENCES paciente(dni_paciente) ON DELETE CASCADE,
+        FOREIGN KEY(id_doctor) REFERENCES doctor(id_doctor) ON DELETE SET NULL,
+        FOREIGN KEY(id_estado) REFERENCES estados_caso(id_estado),
+        FOREIGN KEY(id_especialidad) REFERENCES especialidad(id_especialidad)
     )
     """)
 
@@ -180,9 +164,7 @@ def init_db():
         altura REAL CHECK(altura > 0),
         peso REAL CHECK(peso > 0),
         prioridad_ia INTEGER CHECK(prioridad_ia BETWEEN 1 AND 5),
-        
         fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        
         FOREIGN KEY(caso_id)
             REFERENCES casos_emergencia(id)
             ON DELETE CASCADE
@@ -200,11 +182,11 @@ def init_db():
 
         presion_arterial TEXT,
 
-        frecuencia_cardiaca INTEGER,
+        frecuencia_cardiaca INTEGER CHECK(frecuencia_cardiaca > 0),
 
-        saturacion_oxigeno INTEGER,
+        saturacion_oxigeno INTEGER CHECK(saturacion_oxigeno BETWEEN 0 AND 100),
 
-        temperatura REAL,
+        temperatura REAL CHECK(temperatura BETWEEN 30 AND 45),
 
         observaciones TEXT,
 
@@ -222,27 +204,12 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS hospitalizaciones (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-
         caso_id INTEGER UNIQUE NOT NULL,
-
-        habitacion_id INTEGER,
-
         fecha_ingreso TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
         fecha_salida TIMESTAMP,
-
-        estado TEXT DEFAULT 'internado'
-            CHECK(estado IN ('internado', 'alta')),
-
+        estado TEXT DEFAULT 'internado' CHECK(estado IN ('internado', 'alta')),
         observaciones TEXT,
-
-        FOREIGN KEY(caso_id)
-            REFERENCES casos_emergencia(id)
-            ON DELETE CASCADE,
-
-        FOREIGN KEY(habitacion_id)
-            REFERENCES habitaciones(id)
-            ON DELETE SET NULL
+        FOREIGN KEY(caso_id) REFERENCES casos_emergencia(id) ON DELETE CASCADE
     )
     """)
 
