@@ -31,17 +31,17 @@ def seed_data():
     # 🧑‍⚕️ Doctores
     cursor.executemany("""
     INSERT OR IGNORE INTO doctores 
-    (id, nombre, especialidad_id, disponibilidad, puntuacion)
-    VALUES (?, ?, ?, ?, ?)
+    (id, nombre, especialidad_id, disponibilidad)
+    VALUES (?, ?, ?, ?)
     """, [
-        (1, 'Dr. MIGUEL ALBERTO RIVERA', 1, 1, 5),
-        (2, 'Dr. ROGER MARTIN SARMIENTO', 1, 1, 5),
-        (3, 'Dr. CARLOS ALBERTO ROCHA', 2, 1, 5),
-        (4, 'Dr. TATIANA MARISELA VALERA', 3, 1, 5),
-        (5, 'Dr. PETER WILLIAM ROJAS', 4, 1, 5),
-        (6, 'Dr. MIGUEL DE LOS SANTOS VERONA', 4, 1, 5),
-        (7, 'Dr. ROBERTH ISAAC ACOSTA', 5, 1, 5),
-        (8, 'Dr. SUSSAN TATIANA CASTRO', 5, 1, 5),
+        (1, 'Dr. MIGUEL ALBERTO RIVERA', 1, 1),
+        (2, 'Dr. ROGER MARTIN SARMIENTO', 1, 1),
+        (3, 'Dr. CARLOS ALBERTO ROCHA', 2, 1),
+        (4, 'Dr. TATIANA MARISELA VALERA', 3, 1),
+        (5, 'Dr. PETER WILLIAM ROJAS', 4, 1),
+        (6, 'Dr. MIGUEL DE LOS SANTOS VERONA', 4, 1),
+        (7, 'Dr. ROBERTH ISAAC ACOSTA', 5, 1),
+        (8, 'Dr. SUSSAN TATIANA CASTRO', 5, 1),
 
     ])
 

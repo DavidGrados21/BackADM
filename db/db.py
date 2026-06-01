@@ -97,7 +97,6 @@ def init_db():
         nombre TEXT,
         especialidad_id INTEGER,
         disponibilidad INTEGER CHECK(disponibilidad IN (0,1)),
-        puntuacion INTEGER CHECK(puntuacion BETWEEN 1 AND 5),
         FOREIGN KEY(especialidad_id) REFERENCES especialidades(id) ON DELETE SET NULL
     )
     """)

@@ -23,6 +23,9 @@ class PacienteActualizar(BaseModel):
     religion: Optional[str] = None
     contacto_emergencia: Optional[str] = None
     
+class EspecialidadRequest(BaseModel):
+    especialidad: str
+    
         
 class MonitoreoSchema(BaseModel):
 
