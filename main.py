@@ -4,7 +4,7 @@ from db.db import init_db
 from db.seed import seed_data
 from routes import mostrarcola, triaje
 from routes.Extras import paseaatencion,consultadni, consultarDescripcion, listaDoc
-from routes.gemini import clasificar_ia, doctor_ia
+from routes.gemini import clasificar_ia, area_ia
 
 from fastapi.middleware.cors import CORSMiddleware
 from routes.Paciente import agregarpacientes,editarpaciente,mostrarpaciente,mostrarpacientes
@@ -45,4 +45,4 @@ app.include_router(consultarDescripcion.router)
 app.include_router(listaDoc.router)
 
 app.include_router(clasificar_ia.router)
-app.include_router(doctor_ia.router)
+app.include_router( area_ia.router)

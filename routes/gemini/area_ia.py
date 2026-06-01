@@ -13,15 +13,20 @@ client = genai.Client(api_key= TOKEN_GEMINI )
 class PacienteSintomas(BaseModel):
     sintomas: str
 
-@router.post("/clasificar-doctor")
+@router.post("/clasificar-area")
 def clasificar_paciente(datos: PacienteSintomas):
     try:
         instrucciones_sistema = (
-            "Actúas como un sistema de derivación médica hospitalaria. "
-            "Analiza los síntomas y selecciona únicamente una de las siguientes especialidades: "
-            "CARDIOLOGIA,NEUROLOGIA,TRAUMATOLOGIA PEDIATRICA,GASTROENTEROLOGIA,OFTALMOLOGIA. "
-            "Responde únicamente con una de esas categorías. "
-            "No agregues explicaciones ni texto adicional."
+            "Eres un clasificador de derivación médica. "
+            "Debes devolver exactamente una de las siguientes etiquetas: "
+            "PEDIATRIA, MATERNIDAD, CIRUGIA, TRAUMATOLOGIA, MEDICINA GENERAL.\n\n"
+            "Reglas:\n"
+            "- PEDIATRIA: pacientes menores de 15 años o patologías pediátricas.\n"
+            "- MATERNIDAD: embarazo, controles prenatales, trabajo de parto, puerperio y complicaciones obstétricas.\n"
+            "- CIRUGIA: patologías que puedan requerir evaluación o intervención quirúrgica.\n"
+            "- TRAUMATOLOGIA: fracturas, golpes, caídas, esguinces, luxaciones, dolor osteomuscular o lesiones traumáticas.\n"
+            "- MEDICINA GENERAL: cualquier otro motivo de consulta.\n\n"
+            "Salida obligatoria: devuelve únicamente una etiqueta exacta de la lista anterior."
         )
 
         response = client.models.generate_content(
@@ -34,12 +39,12 @@ def clasificar_paciente(datos: PacienteSintomas):
         )
 
         if response.text:
-            especialidadM = response.text.strip()
+            area = response.text.strip()
         else:
 
             raise HTTPException(status_code=400, detail="La IA no pudo generar una prioridad para estos síntomas.")
 
-        return {"especialidad": especialidadM}
+        return {"area": area}
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error en la IA: {str(e)}")
