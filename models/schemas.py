@@ -1,19 +1,21 @@
 from pydantic import BaseModel
 from typing import List, Literal, Optional
 
-# 🧑 Crear paciente
 class PacienteCrear(BaseModel):
     dni: str
     nombre: str
     sexo: str
     fecha_nacimiento: str
     origen : str
+    id_especialidad: int
     
 class TriajeSchema(BaseModel):
     sintomas: str
     peso: float
     altura: float
     prioridad_ia : float
+    doctor: str
+    especialidad: str
     
 class PacienteActualizar(BaseModel):
     telefono: Optional[str] = None
@@ -26,15 +28,3 @@ class PacienteActualizar(BaseModel):
 class EspecialidadRequest(BaseModel):
     especialidad: str
     
-        
-class MonitoreoSchema(BaseModel):
-
-    presion_arterial: Optional[str] = None
-
-    frecuencia_cardiaca: Optional[int] = None
-
-    saturacion_oxigeno: Optional[int] = None
-
-    temperatura: Optional[float] = None
-
-    observaciones: Optional[str] = None

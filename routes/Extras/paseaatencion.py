@@ -9,9 +9,10 @@ def pasar_a_atencion(caso_id: int):
     cursor = db.cursor()
 
     try:
-        # verificar caso
         cursor.execute("""
-            SELECT estado_id FROM casos_emergencia WHERE id = ?
+            SELECT id_estado
+            FROM casos_emergencia
+            WHERE id = ?
         """, (caso_id,))
         
         caso  = cursor.fetchone()
@@ -19,13 +20,13 @@ def pasar_a_atencion(caso_id: int):
         if not caso :
             raise HTTPException(404, "Caso no encontrado")
 
-        if caso ["estado_id"] != 2:
+        if caso ["id_estado"] != 2:
             raise HTTPException(400, "El paciente no está en pendiente")
 
         # 🔄 solo cambiar estado
         cursor.execute("""
             UPDATE casos_emergencia
-            SET estado_id = 3
+            SET id_estado = 3
             WHERE id = ?
         """, (caso_id,))
 

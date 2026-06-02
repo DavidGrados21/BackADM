@@ -18,14 +18,14 @@ def obtener_por_estado(estado: str):
 
         cursor.execute("""
             SELECT
-                c.id,
-                p.nombre,
-                p.dni,
-                c.prioridad,
-                c.fecha_llegada
-            FROM casos_emergencia c
+                ce.id AS caso_id,
+                p.nombre_paciente AS nombre,
+                p.dni_paciente AS dni,
+                ce.prioridad,
+                ce.fecha_llegada
+            FROM casos_emergencia ce
             
-            JOIN pacientes p ON p.id = c.paciente_id
+            JOIN pacientes p ON p.dni_paciente = ce.dni_paciente
             
             WHERE c.estado_id = ?
             
@@ -41,7 +41,7 @@ def obtener_por_estado(estado: str):
 
         for r in rows:
             item = {
-                "caso_id": r["id"],
+                "caso_id": r["caso_id"],
                 "dni": r["dni"],
                 "nombre": r["nombre"]
             }

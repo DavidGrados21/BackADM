@@ -4,16 +4,16 @@ from db.db import get_db
 router = APIRouter()
 
 @router.get("/pacientes/{paciente_id}")
-def obtener_paciente(paciente_id: int):
+def obtener_paciente(dni_paciente: str):
     db = get_db()
     cursor = db.cursor()
 
     try:
         cursor.execute("""
             SELECT *
-            FROM pacientes
-            WHERE id = ?
-        """, (paciente_id,))
+            FROM paciente
+            WHERE dni_paciente = ?
+        """, (dni_paciente,))
 
         paciente = cursor.fetchone()
 

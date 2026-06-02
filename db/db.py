@@ -104,7 +104,6 @@ def init_db():
         id_doctor INTEGER PRIMARY KEY,
         nombre_doctor TEXT NOT NULL,
         especialidad_id INTEGER NOT NULL ,
-        disponibilidad INTEGER CHECK(disponibilidad IN (0,1)),
         email_doctor TEXT UNIQUE NOT NULL,
         password_doctor TEXT NOT NULL,
         FOREIGN KEY(especialidad_id) REFERENCES especialidad(id_especialidad) ON DELETE RESTRICT

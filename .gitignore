@@ -8,3 +8,14 @@ models/__pycache__/schemas.cpython-314.pyc
 routes/gemini/__pycache__/gemini.cpython-314.pyc
 routes/Paciente/__pycache__/agregarpacientes.cpython-314.pyc
 hospital_dbSCD.db
+db/__pycache__/db.cpython-314.pyc
+db/__pycache__/seed.cpython-314.pyc
+models/__pycache__/schemas.cpython-314.pyc
+routes/__pycache__/mostrarcola.cpython-314.pyc
+routes/__pycache__/triaje.cpython-314.pyc
+routes/Extras/__pycache__/consultarDescripcion.cpython-314.pyc
+routes/Extras/__pycache__/paseaatencion.cpython-314.pyc
+routes/Paciente/__pycache__/agregarpacientes.cpython-314.pyc
+routes/Paciente/__pycache__/editarpaciente.cpython-314.pyc
+routes/Paciente/__pycache__/mostrarpaciente.cpython-314.pyc
+routes/Paciente/__pycache__/mostrarpacientes.cpython-314.pyc

@@ -10,18 +10,19 @@ def listar_pacientes():
 
     try:
         cursor.execute("""
-            SELECT id, nombre, dni
-            FROM pacientes
-            ORDER BY id DESC
+            SELECT 
+                dni_paciente,
+                nombre_paciente
+            FROM paciente
+            ORDER BY created_at DESC
         """)
 
         pacientes = cursor.fetchall()
 
         return [
             {
-                "id": row["id"],
-                "nombre": row["nombre"],
-                "dni": row["dni"]
+                "dni": row["dni_paciente"],
+                "nombre": row["nombre_paciente"],
             }
             for row in pacientes
         ]

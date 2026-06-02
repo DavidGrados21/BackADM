@@ -28,10 +28,7 @@ def validar_datos(data):
 
 @router.put("/triaje/{caso_id}")
 
-def realizar_triaje(
-    caso_id: int,
-    data: TriajeSchema
-):
+def realizar_triaje(caso_id: int, data: TriajeSchema):
 
     db = get_db()
     cursor = db.cursor()
@@ -41,7 +38,7 @@ def realizar_triaje(
         validar_datos(data)
 
         cursor.execute("""
-            SELECT id
+            SELECT id, id_especialidad
             FROM casos_emergencia
             WHERE id = ?
         """, (caso_id,))
@@ -49,11 +46,37 @@ def realizar_triaje(
         caso = cursor.fetchone()
 
         if not caso:
+            raise HTTPException(status_code=404,detail="Caso no encontrado")
+        
+        # 2. buscar especialidad por nombre
+        cursor.execute("""
+            SELECT id_especialidad
+            FROM especialidad
+            WHERE nombre_especialidad = ?
+        """, (data.especialidad,))
 
-            raise HTTPException(
-                status_code=404,
-                detail="Caso no encontrado"
-            )
+        esp = cursor.fetchone()
+
+        if not esp:
+            raise HTTPException(404, "Especialidad no encontrada")
+
+        id_especialidad = esp["id_especialidad"]
+
+        # 3. buscar doctor por nombre
+        cursor.execute("""
+            SELECT id_doctor
+            FROM doctor
+            WHERE nombre_doctor = ?
+            LIMIT 1
+        """, (data.doctor,))
+
+        doc = cursor.fetchone()
+
+        if not doc:
+            raise HTTPException(404, "Doctor no encontrado")
+
+        id_doctor = doc["id_doctor"]
+
 
         # =========================
         # INSERTAR O ACTUALIZAR
@@ -62,21 +85,15 @@ def realizar_triaje(
         cursor.execute("""
 
             INSERT INTO triaje (
-
                 caso_id,
                 sintomas,
                 altura,
                 peso,
                 prioridad_ia
-
             )
-
             VALUES (?, ?, ?, ?, ?)
-
             ON CONFLICT(caso_id)
-
             DO UPDATE SET
-
                 sintomas = excluded.sintomas,
                 altura = excluded.altura,
                 peso = excluded.peso,
@@ -95,60 +112,38 @@ def realizar_triaje(
         # =========================
         # ACTUALIZAR CASO
         # =========================
-
+        
         cursor.execute("""
-
             UPDATE casos_emergencia
-
             SET
                 prioridad = ?,
-                estado_id = 2
-
+                id_estado = 2,
+                id_doctor = ?,
+                id_especialidad = ?
             WHERE id = ?
-
         """, (
-
             data.prioridad_ia,
+            id_doctor,
+            id_especialidad,
             caso_id
-
         ))
 
         db.commit()
 
         return {
-
-            "mensaje":
-                "Triaje completado correctamente",
-
-            "caso_id":
-                caso_id,
-
-            "prioridad":
-                data.prioridad_ia,
-
-            "estado":
-                "pendiente"
-
+            "mensaje": "Triaje completado correctamente",
+            "caso_id": caso_id,
+            "doctor": data.doctor,
+            "especialidad": data.especialidad,
+            "prioridad": data.prioridad_ia
         }
 
     except HTTPException:
-
         raise
 
     except Exception as e:
-
         db.rollback()
-
-        print(
-            "ERROR triaje:",
-            e
-        )
-
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
+        raise HTTPException(500,str(e))
 
     finally:
-
         db.close()

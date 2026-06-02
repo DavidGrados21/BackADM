@@ -8,10 +8,11 @@ def obtener_descripcion(caso_id: int):
     conn = get_db()
     cursor = conn.cursor()
 
-    cursor.execute(
-        "SELECT sintomas FROM triaje WHERE caso_id = ?",
-        (caso_id,)
-    )
+    cursor.execute("""
+        SELECT sintomas
+        FROM triaje
+        WHERE caso_id = ?
+    """, (caso_id,))
 
     resultado = cursor.fetchone()
     conn.close()
@@ -21,5 +22,5 @@ def obtener_descripcion(caso_id: int):
 
     return {
         "caso_id": caso_id,
-        "sintomas": resultado[0]
+        "sintomas": resultado["sintomas"]
     }

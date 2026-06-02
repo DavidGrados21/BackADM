@@ -11,15 +11,16 @@ def doctores_disponibles(data: EspecialidadRequest):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT d.nombre
-        FROM doctores d
-        JOIN especialidades e
-        ON d.especialidad_id = e.id
-        WHERE e.nombre = ?
-            AND d.disponibilidad = 1
-        """, (data.especialidad,))
+        SELECT d.nombre_doctor
+        FROM doctor d
+        JOIN especialidad e
+            ON d.especialidad_id = e.id_especialidad
+        WHERE e.nombre_especialidad = ?
+    """, (data.especialidad,))
+
 
     doctores = [row[0] for row in cursor.fetchall()]
+    
     conn.close()
 
     return doctores

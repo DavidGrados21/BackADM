@@ -9,7 +9,9 @@ def seed_data():
 
     # 🏥 Estados de casos de emergencia
     cursor.executemany("""
-    INSERT OR IGNORE INTO estados_caso (id, nombre) VALUES (?, ?)
+        INSERT OR IGNORE INTO estados_caso 
+        (id_estado, nombre_estado) 
+        VALUES (?, ?)
     """, [
         (1, 'entrante'),
         (2, 'pendiente'),
@@ -19,7 +21,9 @@ def seed_data():
 
     # 🏥 Especialidades
     cursor.executemany("""
-    INSERT OR IGNORE INTO especialidades (id, nombre) VALUES (?, ?)
+    INSERT OR IGNORE INTO especialidad
+    (id_especialidad, nombre_especialidad) 
+    VALUES (?, ?)
     """, [
         (1, 'CARDIOLOGIA'),
         (2, 'NEUROLOGIA'),
@@ -30,36 +34,25 @@ def seed_data():
 
     # 🧑‍⚕️ Doctores
     cursor.executemany("""
-    INSERT OR IGNORE INTO doctores 
-    (id, nombre, especialidad_id, disponibilidad)
-    VALUES (?, ?, ?, ?)
+    INSERT OR IGNORE INTO doctor
+    (id_doctor, nombre_doctor, especialidad_id, email_doctor, password_doctor)
+    VALUES (?, ?, ?, ?, ?)
     """, [
-        (1, 'Dr. MIGUEL ALBERTO RIVERA', 1, 1),
-        (2, 'Dr. ROGER MARTIN SARMIENTO', 1, 1),
-        (3, 'Dr. CARLOS ALBERTO ROCHA', 2, 1),
-        (4, 'Dr. TATIANA MARISELA VALERA', 3, 1),
-        (5, 'Dr. PETER WILLIAM ROJAS', 4, 1),
-        (6, 'Dr. MIGUEL DE LOS SANTOS VERONA', 4, 1),
-        (7, 'Dr. ROBERTH ISAAC ACOSTA', 5, 1),
-        (8, 'Dr. SUSSAN TATIANA CASTRO', 5, 1),
-
-    ])
-
-    # 🔐 Usuarios (asociados a doctores)
-    cursor.executemany("""
-    INSERT OR IGNORE INTO usuarios
-    (doctor_id, email, password)
-    VALUES (?, ?, ?)
-    """, [
-        (1, 'juan@hospital.com', '1234'),
-        (2, 'ana@hospital.com', '1234'),
-        (3, 'luis@hospital.com', '1234')
+        (1, 'Dr. MIGUEL ALBERTO RIVERA', 1, 'miguel.rivera@clinica.com', 'Miguel123'),
+        (2, 'Dr. ROGER MARTIN SARMIENTO', 1, 'roger.sarmiento@clinica.com', 'Roger123'),
+        (3, 'Dr. CARLOS ALBERTO ROCHA', 2, 'carlos.rocha@clinica.com', 'Carlos123'),
+        (4, 'Dr. TATIANA MARISELA VALERA', 3, 'tatiana.valera@clinica.com', 'Tatiana123'),
+        (5, 'Dr. PETER WILLIAM ROJAS', 4, 'peter.rojas@clinica.com', 'Peter123'),
+        (6, 'Dr. MIGUEL DE LOS SANTOS VERONA', 4, 'miguel.verona@clinica.com', 'Verona123'),
+        (7, 'Dr. ROBERTH ISAAC ACOSTA', 5, 'roberth.acosta@clinica.com', 'Acosta123'),
+        (8, 'Dr. SUSSAN TATIANA CASTRO', 5, 'sussan.castro@clinica.com', 'Castro123'),
     ])
 
     # 🛏️ Camillas
     cursor.executemany("""
-    INSERT OR IGNORE INTO camillas (id, ocupada)
-    VALUES (?, ?)
+        INSERT OR IGNORE INTO camilla
+        (id_camilla, estado_camilla)
+        VALUES (?, ?)
     """, [
         (1, 0),
         (2, 0),
@@ -67,19 +60,6 @@ def seed_data():
         (4, 0),
         (5, 0)
     ])
-    
-    # 🏨 Habitaciones
-    cursor.executemany("""
-    INSERT OR IGNORE INTO habitaciones
-    (id, numero, piso, ocupada)
-    VALUES (?, ?, ?, ?)
-    """, [
-    (1, '101', 1, 0),
-    (2, '102', 1, 0),
-    (3, '201', 2, 0),
-    (4, '202', 2, 0),
-    (5, '301', 3, 0)
-])
 
     db.commit()
     print("✅ Datos iniciales cargados correctamente")

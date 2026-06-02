@@ -6,7 +6,7 @@ router = APIRouter()
 
 @router.put("/pacientes/{paciente_id}")
 def actualizar_paciente(
-    paciente_id: int,
+    dni_paciente: str,
     paciente: PacienteActualizar
 ):
     db = get_db()
@@ -15,10 +15,10 @@ def actualizar_paciente(
     try:
         # verificar si existe
         cursor.execute("""
-            SELECT id
-            FROM pacientes
-            WHERE id = ?
-        """, (paciente_id,))
+            SELECT dni_paciente
+            FROM paciente
+            WHERE dni_paciente = ?
+        """, (dni_paciente,))
 
         existe = cursor.fetchone()
 
@@ -29,15 +29,15 @@ def actualizar_paciente(
             )
 
         cursor.execute("""
-            UPDATE pacientes
+            UPDATE paciente
             SET
-                telefono = ?,
-                direccion = ?,
-                tipo_sangre = ?,
-                tiene_tatuajes = ?,
-                religion = ?,
-                contacto_emergencia = ?
-            WHERE id = ?
+                telefono_paciente = ?,
+                direccion_paciente = ?,
+                tipo_sangre_paciente = ?,
+                tiene_tatuajes_paciente = ?,
+                religion_paciente = ?,
+                contacto_emergencia_paciente = ?
+            WHERE dni_paciente = ?
         """, (
             paciente.telefono,
             paciente.direccion,
@@ -45,7 +45,7 @@ def actualizar_paciente(
             paciente.tiene_tatuajes,
             paciente.religion,
             paciente.contacto_emergencia,
-            paciente_id
+            dni_paciente
         ))
 
         db.commit()
