@@ -4,7 +4,6 @@ from models.schemas import EspecialidadRequest
 
 router = APIRouter()
 
-
 @router.post("/doctores-disponibles")
 def doctores_disponibles(data: EspecialidadRequest):
     conn = get_db()

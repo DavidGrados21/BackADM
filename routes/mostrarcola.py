@@ -14,7 +14,7 @@ def obtener_por_estado(estado: str):
         if estado not in ESTADOS:
             raise HTTPException(404, "Estado no válido")
 
-        estado_id = ESTADOS[estado]
+        id_estado = ESTADOS[estado]
 
         cursor.execute("""
             SELECT
@@ -22,18 +22,19 @@ def obtener_por_estado(estado: str):
                 p.nombre_paciente AS nombre,
                 p.dni_paciente AS dni,
                 ce.prioridad,
-                ce.fecha_llegada
+                ce.fecha_llegada,
+                ce.id_estado
             FROM casos_emergencia ce
             
-            JOIN pacientes p ON p.dni_paciente = ce.dni_paciente
+            JOIN paciente p ON p.dni_paciente = ce.dni_paciente
             
-            WHERE c.estado_id = ?
+            WHERE ce.id_estado = ?
             
             ORDER BY
-                c.prioridad ASC,
-                c.fecha_llegada ASC
+                ce.prioridad ASC,
+                ce.fecha_llegada ASC
                 
-        """, (estado_id,))
+        """, (id_estado,))
 
         rows = cursor.fetchall()
 
@@ -43,7 +44,8 @@ def obtener_por_estado(estado: str):
             item = {
                 "caso_id": r["caso_id"],
                 "dni": r["dni"],
-                "nombre": r["nombre"]
+                "nombre": r["nombre"],
+                "id_estado": r["id_estado"]
             }
 
             if estado in ["pendiente", "en_atencion"]:

@@ -19,3 +19,4 @@ routes/Paciente/__pycache__/agregarpacientes.cpython-314.pyc
 routes/Paciente/__pycache__/editarpaciente.cpython-314.pyc
 routes/Paciente/__pycache__/mostrarpaciente.cpython-314.pyc
 routes/Paciente/__pycache__/mostrarpacientes.cpython-314.pyc
+routes/__pycache__/mostrarcola.cpython-314.pyc

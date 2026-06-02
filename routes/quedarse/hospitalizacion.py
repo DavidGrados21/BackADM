@@ -18,7 +18,7 @@ def hospitalizar_paciente(caso_id: int, habitacion_id: int):
         cursor.execute("""
             SELECT 
                 id,
-                estado_id
+                id_estado
             FROM casos_emergencia
             WHERE id = ?
         """, (caso_id,))
@@ -29,7 +29,7 @@ def hospitalizar_paciente(caso_id: int, habitacion_id: int):
             raise HTTPException(status_code=404,detail="Caso no encontrado")
 
         # ✅ debe estar en atención
-        if caso["estado_id"] != 3:
+        if caso["id_estado"] != 3:
             raise HTTPException(status_code=400,detail="El paciente no está en atención")
 
         # =========================

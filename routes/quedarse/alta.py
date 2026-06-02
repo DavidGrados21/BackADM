@@ -68,7 +68,7 @@ def dar_alta_hospitalaria(hospitalizacion_id: int):
         # =========================
         cursor.execute("""
             UPDATE casos_emergencia
-            SET estado_id = 4
+            SET id_estado = 4
             WHERE id = ?
         """, (caso_id,))
 
