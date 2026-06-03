@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from db.db import init_db
 from db.seed import seed_data
 from routes import mostrarcola, triaje
-from routes.Doctor import listaDoc,casos_doc
+from routes.Doctor import lista_doc,casos_doc, login_doc
 from routes.Extras import paseaatencion,consultadni, consultarDescripcion
 from routes.gemini import clasificar_ia, doctor_ia
 
@@ -43,8 +43,9 @@ app.include_router(mostrarcola.router)
 app.include_router(paseaatencion.router)
 app.include_router(consultadni.router)
 app.include_router(consultarDescripcion.router)
-app.include_router(listaDoc.router)
+app.include_router(lista_doc.router)
 app.include_router(casos_doc.router)
+app.include_router(login_doc.router)
 
 app.include_router(clasificar_ia.router)
 app.include_router(doctor_ia.router)

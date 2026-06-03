@@ -28,3 +28,7 @@ class PacienteActualizar(BaseModel):
 class EspecialidadRequest(BaseModel):
     especialidad: str
     
+class LoginDoctor(BaseModel):
+    correo: str
+    password: str
+    
