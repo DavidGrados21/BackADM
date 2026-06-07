@@ -3,7 +3,7 @@ from db.db import get_db
 
 router = APIRouter()
 
-@router.get("/pacientes/{paciente_id}")
+@router.get("/pacientes/{dni_paciente}")
 def obtener_paciente(dni_paciente: str):
     db = get_db()
     cursor = db.cursor()
@@ -25,10 +25,13 @@ def obtener_paciente(dni_paciente: str):
 
         return dict(paciente)
 
+    except HTTPException:
+        raise
+
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=str(e)
+            detail=f"Error interno: {str(e)}"
         )
 
     finally:

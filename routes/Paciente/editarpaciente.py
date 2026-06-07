@@ -4,29 +4,16 @@ from models.schemas import PacienteActualizar
 
 router = APIRouter()
 
-@router.put("/pacientes/{paciente_id}")
+@router.put("/pacientes/{dni_paciente}")
 def actualizar_paciente(
     dni_paciente: str,
     paciente: PacienteActualizar
 ):
-    db = get_db()
-    cursor = db.cursor()
+    db = None
 
     try:
-        # verificar si existe
-        cursor.execute("""
-            SELECT dni_paciente
-            FROM paciente
-            WHERE dni_paciente = ?
-        """, (dni_paciente,))
-
-        existe = cursor.fetchone()
-
-        if not existe:
-            raise HTTPException(
-                status_code=404,
-                detail="Paciente no encontrado"
-            )
+        db = get_db()
+        cursor = db.cursor()
 
         cursor.execute("""
             UPDATE paciente
@@ -48,19 +35,30 @@ def actualizar_paciente(
             dni_paciente
         ))
 
+        if cursor.rowcount == 0:
+            raise HTTPException(
+                status_code=404,
+                detail="Paciente no encontrado"
+            )
+
         db.commit()
 
         return {
             "mensaje": "Paciente actualizado correctamente"
         }
 
-    except Exception as e:
-        db.rollback()
+    except HTTPException:
+        raise
+
+    except Exception:
+        if db:
+            db.rollback()
 
         raise HTTPException(
             status_code=500,
-            detail=str(e)
+            detail="Error interno del servidor"
         )
 
     finally:
-        db.close()
+        if db:
+            db.close()
