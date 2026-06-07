@@ -28,13 +28,14 @@ class EspecialidadRequest(BaseModel):
     
         
 class MonitoreoSchema(BaseModel):
-
     presion_arterial: Optional[str] = None
-
     frecuencia_cardiaca: Optional[int] = None
-
     saturacion_oxigeno: Optional[int] = None
-
     temperatura: Optional[float] = None
-
     observaciones: Optional[str] = None
+    
+class ChatRequest(BaseModel):
+    message: str
+
+class ChatResponse(BaseModel):
+    response: str
