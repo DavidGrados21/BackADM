@@ -32,3 +32,8 @@ class LoginDoctor(BaseModel):
     correo: str
     password: str
     
+class ChatRequest(BaseModel):
+    message: str
+
+class ChatResponse(BaseModel):
+    response: str

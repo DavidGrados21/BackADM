@@ -6,6 +6,7 @@ from routes import mostrarcola, triaje
 from routes.Doctor import lista_doc,casos_doc, login_doc
 from routes.Extras import paseaatencion,consultadni, consultarDescripcion
 from routes.gemini import clasificar_ia, doctor_ia
+from routes.Grook import chatbot
 
 from fastapi.middleware.cors import CORSMiddleware
 from routes.Paciente import agregarpacientes,editarpaciente,mostrarpaciente,mostrarpacientes
@@ -49,3 +50,5 @@ app.include_router(login_doc.router)
 
 app.include_router(clasificar_ia.router)
 app.include_router(doctor_ia.router)
+
+app.include_router(chatbot.router)
