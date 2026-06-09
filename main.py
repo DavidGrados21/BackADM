@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from db.db import init_db
 from db.seed import seed_data
-from routes import mostrarcola, triaje
+from routes import mostrarcola, triaje, dashboard
 from routes.Extras import paseaatencion,consultadni, consultarDescripcion, listaDoc
 from routes.gemini import clasificar_ia, area_ia
 from routes.Grook import chatbot
@@ -49,3 +49,4 @@ app.include_router(clasificar_ia.router)
 app.include_router(area_ia.router)
 
 app.include_router(chatbot.router)
+app.include_router(dashboard.router)
