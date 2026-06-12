@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from db.db import init_db
 from db.seed import seed_data
 from routes import mostrarcola, triaje, dashboard
-from routes.Extras import paseaatencion,consultadni, consultarDescripcion, listaDoc
+from routes.Extras import paseaatencion,consultadni, consultarDescripcion, listaDoc, consultacee
 from routes.gemini import clasificar_ia, area_ia
 from routes.Grook import chatbot
 
@@ -42,6 +42,7 @@ app.include_router(triaje.router)
 app.include_router(mostrarcola.router)
 app.include_router(paseaatencion.router)
 app.include_router(consultadni.router)
+app.include_router(consultacee.router)
 app.include_router(consultarDescripcion.router)
 app.include_router(listaDoc.router)
 
